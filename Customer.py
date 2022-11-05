@@ -50,6 +50,14 @@ class Customer:
         self.__accounts.remove(account)
         del account
         return
+    def display(self):
+        """Displays the customer"""
+        print("Name : ",self.__name)
+        print("Id : ",self.__id)
+        print("Adress : ",self.__adress)
+        for accoutn in self.__accounts:
+            print("Account : ",accoutn.getNumber())
+        return
     
     
 

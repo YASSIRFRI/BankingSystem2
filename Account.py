@@ -7,6 +7,7 @@
 import Money
 import Transaction
 import Customer
+import random
 
 class Account:
     """This represents an Account class"""
@@ -14,7 +15,7 @@ class Account:
         self.custumer=customer
         self._number=number
         self._balance=Money.Money(balance)
-        self._minimum=minimum
+        self._minimum=Money.Money(minimum)
         self._transaction=[]
     
     def getNumber(self):
@@ -25,7 +26,7 @@ class Account:
         return self._balance.getAmount()
     def getMinimum(self):
         """Returns the minimum balance of the account"""
-        return self._minimum
+        return self._minimum.getAmount()
     def setBalance(self,balance):
         """Sets the balance of the account"""
         self._balance=Money.Money(balance)
@@ -43,7 +44,7 @@ class Account:
     def sendMoney(self,other,amount):
         """Creates a transfer transaction"""
         try:
-            transfer=Transaction.Transfer(self,other,amount)
+            transfer=Transaction.Transfer(self,other,amount,random.randint(0,100000))
             transfer.begin()
         except:
             raise ValueError("Something went wrong")
@@ -52,7 +53,7 @@ class Account:
         """Creates a withdraw transaction"""
         try:
             print("Withdraw")
-            withdraw=Transaction.Witdraw(self,amount)
+            withdraw=Transaction.Witdraw(self,amount,random.randint(0,100000))
             withdraw.begin()
         except:
             raise ValueError("Something went wrong")
@@ -60,7 +61,7 @@ class Account:
     def deposit(self,amount):
         """Creates a deposit transaction"""
         try:
-            deposit=Transaction.Deposit(self,amount)
+            deposit=Transaction.Deposit(self,amount,random.randint(0,100000))
             deposit.begin()
         except:
             return False
@@ -72,6 +73,14 @@ class Account:
                 transaction.rollback()
                 return True
         return False
+    def display(self):
+        """Displays the account"""
+        print("Number : ",self._number)
+        print("Balance : ",self._balance.getAmount())
+        print("Minimum : ",self._minimum.getAmount())
+        for transaction in self._transaction:
+            transaction.display()
+        return
     
 
 
@@ -91,6 +100,10 @@ class SavingsAccount(Account):
     def setInterestRate(self,interestRate):
         """Sets the interest rate of the savings account"""
         self.__interestRate=interestRate
+    def getInterest(self):
+        """Returns the interest of the savings account"""
+        return self.getBalance()*self.__interestRate
+    
 
 
 
@@ -98,8 +111,6 @@ class CheckingAccount(Account):
     """This represents a CheckingAccount class"""
     def __init__(self,number,balance,minimum=0) -> None:
         super().__init__(number,balance,0)
-
-
    
 
 
