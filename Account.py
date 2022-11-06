@@ -12,7 +12,7 @@ import random
 class Account:
     """This represents an Account class"""
     def __init__(self,number,balance,customer: Customer,minimum=0,transaction=[]) -> None:
-        self.custumer=customer
+        self._custumer=customer
         self._number=number
         self._balance=Money.Money(balance)
         self._minimum=Money.Money(minimum)
@@ -44,6 +44,7 @@ class Account:
     def sendMoney(self,other,amount):
         """Creates a transfer transaction"""
         try:
+            #The transaction id is randomly generated
             transfer=Transaction.Transfer(self,other,amount,random.randint(0,100000))
             transfer.begin()
         except:
@@ -52,7 +53,7 @@ class Account:
     def withdraw(self,amount):
         """Creates a withdraw transaction"""
         try:
-            print("Withdraw")
+            #The transaction id is randomly generated
             withdraw=Transaction.Witdraw(self,amount,random.randint(0,100000))
             withdraw.begin()
         except:
@@ -61,6 +62,7 @@ class Account:
     def deposit(self,amount):
         """Creates a deposit transaction"""
         try:
+            #The transaction id is randomly generated
             deposit=Transaction.Deposit(self,amount,random.randint(0,100000))
             deposit.begin()
         except:
@@ -76,6 +78,7 @@ class Account:
     def display(self):
         """Displays the account"""
         print("Number : ",self._number)
+        print("Owner : ",self._custumer.getName())
         print("Balance : ",self._balance.getAmount())
         print("Minimum : ",self._minimum.getAmount())
         for transaction in self._transaction:
@@ -91,6 +94,8 @@ class Account:
 class SavingsAccount(Account):
     """This represents a SavingsAccount class"""
     def __init__(self,number,balance,customer,minimum,interestRate=0.0) -> None:
+        if(balance<minimum):
+            raise ValueError("The balance is lower than the minimum")
         super().__init__(number,balance,customer,minimum)
         self.__interestRate=interestRate
 
@@ -103,14 +108,18 @@ class SavingsAccount(Account):
     def getInterest(self):
         """Returns the interest of the savings account"""
         return self.getBalance()*self.__interestRate
+    def display(self):
+        super().display()
+        print("Interest rate : ",self.__interestRate)
+        
     
 
 
 
 class CheckingAccount(Account):
     """This represents a CheckingAccount class"""
-    def __init__(self,number,balance,minimum=0) -> None:
-        super().__init__(number,balance,0)
+    def __init__(self,number,balance,custumer,minimum=0) -> None:
+        super().__init__(number,balance,custumer,0)
    
 
 

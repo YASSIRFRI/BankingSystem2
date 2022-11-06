@@ -88,11 +88,11 @@ class Transfer(Transaction):
         self._other.addTransaction(self)
         if other!=None:
             other.addTransaction(self)
-    def rollback(self,other):
+    def rollback(self):
         """This method rolls back the transaction"""
-        self._account.setBalance(self._account.getBalance()+self._amount)
-        self._other.setBalance(self._other.getBalance()-self._amount)
-        self._status=Status.Failed
+        self._account.setBalance(self._account.getBalance()+self._amount.getAmount())
+        self._other.setBalance(self._other.getBalance()-self._amount.getAmount())
+        self._status=Status.Cancelled
         self.commit()
         return True
     def getInfo(self):
